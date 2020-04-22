@@ -15,35 +15,50 @@ export enum ButtonType {
 
 interface ButtonBaseProps {
     className?: string;
-    disable?: boolean;
+    disabled?: boolean;
     size?: ButtonSize;
     href?: string;
     btnType?: ButtonType;
     children: React.ReactNode;
 }
 
-const Button: React.FC<ButtonBaseProps> = (props) => {
-    const { btnType, size, children, disable, href } = props;
-    const clss = classNames("btn", {
+type NativeButtonProps = ButtonBaseProps &
+    React.ButtonHTMLAttributes<HTMLElement>;
+type NativeAnchorProps = ButtonBaseProps &
+    React.AnchorHTMLAttributes<HTMLElement>;
+
+export type ButtonProps = Partial<NativeButtonProps & NativeAnchorProps>;
+
+const Button: React.FC<ButtonProps> = (props) => {
+    const {
+        btnType,
+        size,
+        children,
+        disabled,
+        href,
+        className,
+        ...restProps
+    } = props;
+    const clss = classNames("btn", className, {
         [`btn-${btnType}`]: btnType,
         [`btn-${size}`]: size,
-        disable: btnType === ButtonType.Link && disable,
+        disabled: btnType === ButtonType.Link && disabled,
     });
     if (btnType === ButtonType.Link && href) {
         return (
-            <a className={clss} href={href}>
+            <a className={clss} href={href} {...restProps}>
                 {children}
             </a>
         );
     } else {
         return (
-            <button className={clss} disabled={disable}>
+            <button className={clss} disabled={disabled} {...restProps}>
                 {children}
             </button>
         );
     }
 };
 
-Button.defaultProps = { disable: false, btnType: ButtonType.Default };
+Button.defaultProps = { disabled: false, btnType: ButtonType.Default };
 
 export default Button;

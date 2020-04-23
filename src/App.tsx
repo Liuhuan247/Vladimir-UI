@@ -1,14 +1,16 @@
-import React from "react";
+import React, { useState } from "react";
 import Button, { ButtonType, ButtonSize } from "./components/Button/button";
+import Alert from "./components/Alert/alert";
 
 function App() {
+    const [show, setShow] = useState(false);
     return (
         <div className="App">
             <header className="App-header">
                 <Button
                     onClick={(e) => {
                         e.preventDefault();
-                        alert(1);
+                        setShow(!show);
                     }}
                 >
                     Hello
@@ -55,6 +57,9 @@ function App() {
                 >
                     Baidu
                 </Button>
+                {show && (
+                    <Alert title="这是一个Alert" description="副标题"></Alert>
+                )}
                 <p>
                     Edit <code>src/App.tsx</code> and save to reload.
                 </p>
